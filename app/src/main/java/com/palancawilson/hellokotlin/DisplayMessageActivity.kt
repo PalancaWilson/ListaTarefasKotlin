@@ -1,6 +1,7 @@
 package com.palancawilson.hellokotlin
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -26,7 +29,8 @@ import androidx.compose.ui.unit.sp
  * Segunda actividade da aplicação.
  *
  * Recebe a mensagem enviada pela [MainActivity] através da Intent
- * (extra "EXTRA_MESSAGE"), conta as palavras e apresenta um resumo no ecrã.
+ * (extra "EXTRA_MESSAGE"), constrói um [PalavraBundle] e apresenta o
+ * resumo rico gerado por [gerarResumo].
  */
 class DisplayMessageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +40,13 @@ class DisplayMessageActivity : ComponentActivity() {
         // Recupera o texto enviado pela MainActivity. Se não existir, usa uma mensagem por defeito.
         val message = intent.getStringExtra("EXTRA_MESSAGE") ?: "Nenhuma mensagem recebida."
 
-        // 2.1 - Processamento da mensagem: divide em palavras e gera um resumo com a contagem.
-        val summary = gerarResumoContagem(message)
+        // 2.4 - Divide a mensagem, constrói o bundle e gera o resumo processado.
+        val palavras = dividirPalavras(message)
+        val bundle = PalavraBundle(palavras)
+        val resumo = gerarResumo(bundle)
+
+        // Registo do resumo no Logcat para facilitar a verificação.
+        Log.d("DisplayMessageActivity", "Resumo gerado:\n$resumo")
 
         // Define o conteúdo da actividade com Jetpack Compose.
         setContent {
@@ -46,10 +55,10 @@ class DisplayMessageActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // Mostra a mensagem, o resumo e permite voltar (finish() fecha esta actividade).
+                    // Apresenta a mensagem original, o resumo e o botão "Voltar".
                     DisplayMessage(
                         message = message,
-                        summary = summary,
+                        summary = resumo,
                         onBack = { finish() }
                     )
                 }
@@ -68,29 +77,21 @@ fun dividirPalavras(message: String): List<String> =
     message.split(" ").filter { it.isNotBlank() }
 
 /**
- * Gera um resumo com base no número de palavras da mensagem.
- *
- * Demonstra:
- *  - `val` (imutável: words, wordCount) e `var` (mutável: summary);
- *  - manipulação de strings com `split` e `filter`;
- *  - controlo de fluxo com `when` e `if`.
+ * Gera um resumo simples com base no número de palavras (Exercício 2.1).
  *
  * @param message texto introduzido pelo utilizador.
  * @return resumo textual da contagem de palavras.
  */
 fun gerarResumoContagem(message: String): String {
-    // `val` - lista de palavras e contagem (não mudam depois de calculadas).
     val words = dividirPalavras(message)
     val wordCount = words.size
 
-    // `var` - o resumo pode ser alterado de seguida (no if abaixo).
     var summary = when {
         wordCount == 0 -> "Nenhuma palavra encontrada!"
         wordCount == 1 -> "Apenas uma palavra!"
         else -> "Foram digitadas $wordCount palavras."
     }
 
-    // Controlo de fluxo adicional: avisa se a mensagem tiver muitas palavras.
     if (wordCount > 5) {
         summary += " (mensagem longa)"
     }
@@ -99,10 +100,10 @@ fun gerarResumoContagem(message: String): String {
 }
 
 /**
- * Composable que apresenta a mensagem original, o resumo e um botão "Voltar".
+ * Composable que apresenta a mensagem original, o resumo processado e um botão "Voltar".
  *
  * @param message texto original recebido da primeira actividade.
- * @param summary resumo com a contagem de palavras.
+ * @param summary resumo rico gerado por [gerarResumo].
  * @param onBack acção executada ao clicar no botão "Voltar".
  * @param modifier modificador aplicado ao contentor.
  */
@@ -120,14 +121,26 @@ fun DisplayMessage(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            // Permite rolar caso o resumo não caiba no ecrã.
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
             // Mensagem original recebida da primeira actividade.
-            Text(text = message, fontSize = 24.sp, textAlign = TextAlign.Center)
+            Text(
+                text = "Mensagem: $message",
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Resumo gerado pelo processamento (2.1).
-            Text(text = summary, fontSize = 18.sp, textAlign = TextAlign.Center)
+            // Resumo processado (contagem, média, palavra mais longa e palavras longas).
+            Text(
+                text = summary,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Start
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -147,8 +160,8 @@ fun DisplayMessage(
 fun DisplayMessagePreview() {
     MaterialTheme {
         DisplayMessage(
-            message = "Olá, HelloKotlin!",
-            summary = "Foram digitadas 2 palavras.",
+            message = "Olá HelloKotlin mundo",
+            summary = gerarResumo(PalavraBundle(listOf("Olá", "HelloKotlin", "mundo"))),
             onBack = {}
         )
     }
