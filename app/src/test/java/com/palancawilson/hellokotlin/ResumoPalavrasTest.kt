@@ -3,10 +3,7 @@ package com.palancawilson.hellokotlin
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-/**
- * Testes unitários (JVM) da lógica do Exercício 2.1:
- * divisão da mensagem em palavras e geração do resumo com `when`/`if`.
- */
+// Testes do Exercício 2.1 (divisão e resumo).
 class ResumoPalavrasTest {
 
     @Test

@@ -25,13 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Segunda actividade da aplicação.
- *
- * Recebe a mensagem enviada pela [MainActivity] através da Intent
- * (extra "EXTRA_MESSAGE"), constrói um [PalavraBundle] e apresenta o
- * resumo rico gerado por [gerarResumo].
- */
+// Segunda actividade: recebe a mensagem e mostra o resumo.
 class DisplayMessageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,21 +62,11 @@ class DisplayMessageActivity : ComponentActivity() {
     }
 }
 
-/**
- * Divide a mensagem numa lista de palavras, ignorando espaços vazios.
- *
- * @param message texto a dividir.
- * @return lista de palavras não vazias.
- */
+// Divide a mensagem em palavras não vazias.
 fun dividirPalavras(message: String): List<String> =
     message.split(" ").filter { it.isNotBlank() }
 
-/**
- * Gera um resumo simples com base no número de palavras (Exercício 2.1).
- *
- * @param message texto introduzido pelo utilizador.
- * @return resumo textual da contagem de palavras.
- */
+// 2.1: resumo com when/if baseado na contagem de palavras.
 fun gerarResumoContagem(message: String): String {
     val words = dividirPalavras(message)
     val wordCount = words.size
@@ -100,14 +84,7 @@ fun gerarResumoContagem(message: String): String {
     return summary
 }
 
-/**
- * Composable que apresenta a mensagem original, o resumo processado e um botão "Voltar".
- *
- * @param message texto original recebido da primeira actividade.
- * @param summary resumo rico gerado por [gerarResumo].
- * @param onBack acção executada ao clicar no botão "Voltar".
- * @param modifier modificador aplicado ao contentor.
- */
+// Mostra a mensagem original, o resumo e o botão "Voltar".
 @Composable
 fun DisplayMessage(
     message: String,
@@ -153,9 +130,7 @@ fun DisplayMessage(
     }
 }
 
-/**
- * Pré-visualização do ecrã no Android Studio (não é executada em runtime).
- */
+// Pré-visualização no Android Studio.
 @Preview(showBackground = true)
 @Composable
 fun DisplayMessagePreview() {

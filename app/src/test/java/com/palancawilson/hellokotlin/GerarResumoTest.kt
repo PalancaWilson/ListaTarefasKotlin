@@ -5,10 +5,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/**
- * Testes unitários (JVM) da função de nível superior `gerarResumo` (Exercício 2.3),
- * incluindo o filtro por lambda das palavras longas.
- */
+// Testes de gerarResumo (2.3).
 class GerarResumoTest {
 
     @Test

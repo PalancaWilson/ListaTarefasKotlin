@@ -3,10 +3,7 @@ package com.palancawilson.hellokotlin
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-/**
- * Testes unitários (JVM) da data class PalavraBundle (Exercício 2.2):
- * contagem total, comprimento médio e palavra mais longa.
- */
+// Testes da data class PalavraBundle (2.2).
 class PalavraBundleTest {
 
     // Palavras ASCII para evitar ambiguidades no cálculo do comprimento.

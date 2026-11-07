@@ -28,15 +28,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-/** Tag usada nas mensagens de Logcat desta actividade. */
+// Tag usada no Logcat.
 private const val TAG = "MainActivity"
 
-/**
- * Primeira actividade da aplicação (ecrã principal).
- *
- * Apresenta um campo de texto e um botão "Send". Ao clicar no botão,
- * a mensagem escrita é enviada para a [DisplayMessageActivity] através de uma Intent.
- */
+// Ecrã principal: campo de texto + botão "Send".
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,13 +59,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * Experimento do Exercício 3.1: produz logs de níveis D, I e E.
-     *
-     * O erro (divisão por zero) é apanhado de propósito para NÃO fechar a app;
-     * a excepção completa (stack trace) fica visível no Logcat através do Log.e.
-     * Para observar o crash "real", basta remover o try/catch.
-     */
+    // 3.1: gera logs D, I e E; o erro é apanhado de propósito.
     private fun executarExperimentoLogcat() {
         Log.d(TAG, "Debug: a preparar o experimento de logging.")
         Log.i(TAG, "Info: a aplicação está a funcionar normalmente.")
@@ -86,11 +75,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-/**
- * Ecrã principal em Compose: campo de texto + botão para enviar a mensagem.
- *
- * @param modifier modificador aplicado ao contentor da UI.
- */
+// Ecrã principal em Compose.
 @Composable
 fun GreetingScreen(modifier: Modifier = Modifier) {
     // Contexto da actividade actual (necessário para Toast e startActivity).
@@ -138,9 +123,7 @@ fun GreetingScreen(modifier: Modifier = Modifier) {
     }
 }
 
-/**
- * Pré-visualização do ecrã no Android Studio (não é executada em runtime).
- */
+// Pré-visualização no Android Studio.
 @Preview(showBackground = true)
 @Composable
 fun GreetingScreenPreview() {
