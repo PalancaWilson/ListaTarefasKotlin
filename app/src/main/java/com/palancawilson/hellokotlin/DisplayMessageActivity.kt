@@ -45,8 +45,9 @@ class DisplayMessageActivity : ComponentActivity() {
         val bundle = PalavraBundle(palavras)
         val resumo = gerarResumo(bundle)
 
-        // Registo do resumo no Logcat para facilitar a verificação.
+        // Registo do resumo no Logcat para facilitar a verificação (3.1).
         Log.d("DisplayMessageActivity", "Resumo gerado:\n$resumo")
+        Log.i("DisplayMessageActivity", "Mensagem recebida com ${bundle.contar} palavra(s).")
 
         // Define o conteúdo da actividade com Jetpack Compose.
         setContent {

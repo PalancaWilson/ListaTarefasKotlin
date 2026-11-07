@@ -28,6 +28,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+/** Tag usada nas mensagens de Logcat desta actividade. */
+private const val TAG = "MainActivity"
+
 /**
  * Primeira actividade da aplicação (ecrã principal).
  *
@@ -38,8 +41,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Registo no Logcat de que a aplicação arrancou (tag "MainActivity").
-        Log.d("MainActivity", "Aplicação iniciada com sucesso.")
+        // 3.1 - Mensagens de log em diferentes níveis (D = debug, I = info).
+        Log.d(TAG, "Aplicação iniciada com sucesso.")
+        Log.i(TAG, "onCreate: ecrã principal criado.")
+
+        // Experimento de logging/erro intencional do Exercício 3.1.
+        executarExperimentoLogcat()
 
         // Permite desenhar a UI por baixo das barras do sistema (edge-to-edge).
         enableEdgeToEdge()
@@ -54,6 +61,27 @@ class MainActivity : ComponentActivity() {
                     GreetingScreen()
                 }
             }
+        }
+    }
+
+    /**
+     * Experimento do Exercício 3.1: produz logs de níveis D, I e E.
+     *
+     * O erro (divisão por zero) é apanhado de propósito para NÃO fechar a app;
+     * a excepção completa (stack trace) fica visível no Logcat através do Log.e.
+     * Para observar o crash "real", basta remover o try/catch.
+     */
+    private fun executarExperimentoLogcat() {
+        Log.d(TAG, "Debug: a preparar o experimento de logging.")
+        Log.i(TAG, "Info: a aplicação está a funcionar normalmente.")
+
+        try {
+            val divisor = 0
+            val resultado = 10 / divisor
+            Log.i(TAG, "Resultado da divisão: $resultado")
+        } catch (e: ArithmeticException) {
+            // Log.e com o throwable -> imprime a mensagem + stack trace no Logcat.
+            Log.e(TAG, "Erro intencional: divisão por zero!", e)
         }
     }
 }
@@ -92,8 +120,9 @@ fun GreetingScreen(modifier: Modifier = Modifier) {
                 // 1) Mostra uma confirmação rápida (Toast).
                 Toast.makeText(context, "Botão clicado!", Toast.LENGTH_SHORT).show()
 
-                // 2) Regista no Logcat a mensagem digitada.
-                Log.d("MainActivity", "Utilizador digitou a mensagem: $text")
+                // 2) Regista no Logcat a mensagem digitada (níveis D e I).
+                Log.d(TAG, "Utilizador digitou a mensagem: $text")
+                Log.i(TAG, "Botão Send clicado; a iniciar DisplayMessageActivity.")
 
                 // 3) Cria a Intent para abrir a segunda actividade, levando o texto.
                 val intent = Intent(context, DisplayMessageActivity::class.java).apply {
